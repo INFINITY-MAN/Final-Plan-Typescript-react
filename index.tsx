@@ -372,7 +372,7 @@ const App = () => {
             setLoading(false);
         }
     };
-
+  
     const renderView = () => {
         switch (view) {
             case 'studyArea':
