@@ -373,18 +373,6 @@ const App = () => {
         }
     };
 
-            const jsonText = response.text.trim();
-            const parsedResult = JSON.parse(jsonText);
-            setResult(parsedResult);
-            setView('results');
-        } catch (e: any) {
-            console.error("API Error:", e);
-            setError(e.message || 'An unexpected error occurred. Check the console for details.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const renderView = () => {
         switch (view) {
             case 'studyArea':
