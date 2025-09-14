@@ -45,6 +45,10 @@ interface ApiResponse {
 }
 
 // --- CONSTANTS & HELPERS ---
+const MODEL_NAME = 'gemini-1.5-flash'; // <-- Works now
+// const MODEL_NAME = 'gemini-2.5-flash'; // <-- Use this when available
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+//... the rest of your constants
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -324,7 +328,7 @@ const App = () => {
 
         try {
             const response: GenerateContentResponse = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
+                model: MODEL_NAME, // Using the new constant here
                 contents: {
                     parts: [
                         { text: PROMPT },
@@ -343,8 +347,8 @@ const App = () => {
             setResult(parsedResult);
             setView('results');
         } catch (e: any) {
-            setError(e.message || 'An unexpected error occurred. The model may have returned an invalid format.');
-            console.error(e);
+            console.error("API Error:", e);
+            setError(e.message || 'An unexpected error occurred. Check the console for details.');
         } finally {
             setLoading(false);
         }
