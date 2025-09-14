@@ -45,7 +45,7 @@ interface ApiResponse {
 }
 
 // --- CONSTANTS & HELPERS ---
-const MODEL_NAME = 'gemini-1.5-flash'; // <-- Works now
+const MODEL_NAME = 'gemini-2.0-flash'; // <-- Works now
 // const MODEL_NAME = 'gemini-2.5-flash'; // <-- Use this when available
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 //... the rest of your constants
