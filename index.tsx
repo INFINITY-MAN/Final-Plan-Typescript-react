@@ -325,9 +325,11 @@ const App = () => {
         setError('');
         setResult(null);
 
+        let rawApiText = ''; // Variable to hold the raw text for debugging
+
         try {
             const response: GenerateContentResponse = await ai.models.generateContent({
-                model: MODEL_NAME, // Using the new constant here
+                model: MODEL_NAME,
                 contents: {
                     parts: [
                         { text: PROMPT },
@@ -340,6 +342,36 @@ const App = () => {
                     responseSchema: RESPONSE_SCHEMA
                 },
             });
+
+            rawApiText = response.text.trim();
+
+            // --- NEW ROBUST PARSING LOGIC ---
+            // 1. Find the start and end of the JSON object
+            const startIndex = rawApiText.indexOf('{');
+            const endIndex = rawApiText.lastIndexOf('}');
+
+            if (startIndex === -1 || endIndex === -1) {
+                throw new Error("No valid JSON object found in the API response.");
+            }
+
+            // 2. Extract only the JSON part of the string
+            const jsonText = rawApiText.substring(startIndex, endIndex + 1);
+
+            // 3. Try to parse the extracted JSON
+            const parsedResult = JSON.parse(jsonText);
+            setResult(parsedResult);
+            setView('results');
+
+        } catch (e: any) {
+            // This is the most important part for debugging!
+            console.error("--- FAILED TO PARSE JSON ---");
+            console.error("Raw text received from API:", rawApiText);
+            setError("Error: The data from the AI was not in a valid format. Check the browser console (F12) to see the raw response.");
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
 
             const jsonText = response.text.trim();
             const parsedResult = JSON.parse(jsonText);
